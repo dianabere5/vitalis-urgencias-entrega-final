@@ -1,0 +1,596 @@
+{
+    "name": "Integration Airtable, Telegram Bot",
+    "flow": [
+        {
+            "id": 1,
+            "module": "airtable:TriggerWatchRecords",
+            "version": 3,
+            "parameters": {
+                "base": "appqIL3l4UlrKKnwt",
+                "view": "",
+                "table": "tbl97BaIsu0F3iUFI",
+                "config": {
+                    "labelField": "Nombre/ID paciente",
+                    "triggerField": "Última Ejecución"
+                },
+                "formula": "{Estado} = 'Aprobado por Humano'",
+                "maxRecords": 10,
+                "__IMTCONN__": 11269097,
+                "useColumnId": false
+            },
+            "mapper": {},
+            "metadata": {
+                "designer": {
+                    "x": 0,
+                    "y": 0
+                },
+                "setupValidation": {
+                    "result": {
+                        "valid": true,
+                        "fields": []
+                    },
+                    "version": 1,
+                    "configuration": "42c3408655b06f8b"
+                },
+                "restore": {
+                    "parameters": {
+                        "base": {
+                            "label": "Urgencias Clinicas Vitalis"
+                        },
+                        "view": {
+                            "label": "Empty"
+                        },
+                        "table": {
+                            "label": "URGENCIAS"
+                        },
+                        "config": {
+                            "nested": {
+                                "labelField": {
+                                    "label": "Nombre/ID paciente"
+                                },
+                                "triggerField": {
+                                    "label": "Última Ejecución"
+                                }
+                            }
+                        },
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "airtable3"
+                            },
+                            "label": "Diana's Airtable OAuth connection (User ID: usrXwc2vfQqOWAJI8)"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:airtable3,airtable2",
+                        "label": "Connection",
+                        "required": true
+                    },
+                    {
+                        "name": "base",
+                        "type": "select",
+                        "label": "Base",
+                        "required": true
+                    },
+                    {
+                        "name": "useColumnId",
+                        "type": "boolean",
+                        "label": "Use Column ID",
+                        "required": true
+                    },
+                    {
+                        "name": "table",
+                        "type": "select",
+                        "label": "Table",
+                        "required": true
+                    },
+                    {
+                        "name": "config",
+                        "spec": [
+                            {
+                                "name": "triggerField",
+                                "type": "select",
+                                "label": "Trigger field",
+                                "required": true
+                            },
+                            {
+                                "name": "triggerField",
+                                "type": "hidden"
+                            },
+                            {
+                                "name": "labelField",
+                                "type": "select",
+                                "label": "Label field",
+                                "required": true
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "Trigger configuration"
+                    },
+                    {
+                        "name": "maxRecords",
+                        "type": "integer",
+                        "label": "Limit",
+                        "required": true
+                    },
+                    {
+                        "name": "view",
+                        "type": "select",
+                        "label": "View"
+                    },
+                    {
+                        "name": "formula",
+                        "type": "text",
+                        "label": "Formula"
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": "id",
+                        "type": "text",
+                        "label": "ID"
+                    },
+                    {
+                        "name": "createdTime",
+                        "type": "date",
+                        "label": "Created Time"
+                    },
+                    {
+                        "name": "Nombre/ID paciente",
+                        "type": "text",
+                        "label": "Nombre/ID paciente"
+                    },
+                    {
+                        "name": "Estado",
+                        "type": "text",
+                        "label": "Estado"
+                    },
+                    {
+                        "name": "Mensaje Original",
+                        "type": "text",
+                        "label": "Mensaje Original",
+                        "multiline": true
+                    },
+                    {
+                        "name": "Aprobado",
+                        "type": "boolean",
+                        "label": "Aprobado"
+                    },
+                    {
+                        "name": "Fecha Recepción",
+                        "type": "date",
+                        "label": "Fecha Recepción"
+                    },
+                    {
+                        "name": "Prioridad IA",
+                        "type": "text",
+                        "label": "Prioridad IA"
+                    },
+                    {
+                        "name": "Motivo",
+                        "type": "text",
+                        "label": "Motivo",
+                        "multiline": true
+                    },
+                    {
+                        "name": "Última Ejecución",
+                        "type": "date",
+                        "label": "Última Ejecución"
+                    },
+                    {
+                        "name": "Canal Contacto",
+                        "type": "text",
+                        "label": "Canal Contacto"
+                    },
+                    {
+                        "name": " Respuesta Enviada",
+                        "type": "text",
+                        "label": " Respuesta Enviada",
+                        "multiline": true
+                    },
+                    {
+                        "name": "LOG DE ERRORES",
+                        "spec": {
+                            "label": "Record ID"
+                        },
+                        "type": "array",
+                        "label": "LOG DE ERRORES"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 2,
+            "module": "telegram:SendReplyMessage",
+            "version": 1,
+            "parameters": {
+                "__IMTCONN__": 10725634
+            },
+            "mapper": {
+                "text": "Hola {{1.`Nombre/ID paciente`}}, gracias por contactar a Clínica Vitalis.\nEn base a tu consulta (Motivo: {{1.Motivo}}), nuestro equipo médico revisó tu caso y confirma que es prioritario. Te recomendamos acudir a la guardia más cercana o comunicarte al [tu teléfono de guardia] lo antes posible.\n\nSi tu situación empeora, llamá inmediatamente al sistema de emergencias.\n\nEquipo Clínica Vitalis",
+                "chatId": "{{1.`Canal Contacto`}}",
+                "parseMode": "",
+                "replyMarkup": "",
+                "messageThreadId": "",
+                "replyToMessageId": "",
+                "replyMarkupAssembleType": "reply_markup_enter"
+            },
+            "metadata": {
+                "designer": {
+                    "x": 300,
+                    "y": 0
+                },
+                "setupValidation": {
+                    "result": {
+                        "valid": true,
+                        "fields": []
+                    },
+                    "version": 1,
+                    "configuration": "76117aa26900e577"
+                },
+                "restore": {
+                    "expect": {
+                        "parseMode": {
+                            "label": "Empty"
+                        },
+                        "disableNotification": {
+                            "mode": "chose"
+                        },
+                        "replyMarkupAssembleType": {
+                            "label": "Enter the Reply Markup"
+                        }
+                    },
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "telegram"
+                            },
+                            "label": "Diana's Telegram Bot connection"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:telegram",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "chatId",
+                        "type": "text",
+                        "label": "Chat ID",
+                        "required": true
+                    },
+                    {
+                        "name": "text",
+                        "type": "text",
+                        "label": "Text",
+                        "required": true
+                    },
+                    {
+                        "name": "messageThreadId",
+                        "type": "number",
+                        "label": "Message Thread ID"
+                    },
+                    {
+                        "name": "parseMode",
+                        "type": "select",
+                        "label": "Parse Mode",
+                        "validate": {
+                            "enum": [
+                                "Markdown",
+                                "HTML"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "disableNotification",
+                        "type": "boolean",
+                        "label": "Disable Notifications"
+                    },
+                    {
+                        "name": "disableWebPagePreview",
+                        "type": "boolean",
+                        "label": "Disable Link Previews"
+                    },
+                    {
+                        "name": "replyToMessageId",
+                        "type": "number",
+                        "label": "Original Message ID"
+                    },
+                    {
+                        "name": "replyMarkupAssembleType",
+                        "type": "select",
+                        "label": "Enter/Assemble the Reply Markup Field",
+                        "validate": {
+                            "enum": [
+                                "reply_markup_enter",
+                                "reply_markup_assemble"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "replyMarkup",
+                        "type": "text",
+                        "label": "Reply Markup"
+                    }
+                ]
+            }
+        },
+        {
+            "id": 3,
+            "module": "airtable:ActionUpdateRecords",
+            "version": 3,
+            "parameters": {
+                "__IMTCONN__": 10767763
+            },
+            "mapper": {
+                "id": "{{1.id}}",
+                "base": "appqIL3l4UlrKKnwt",
+                "table": "tbl97BaIsu0F3iUFI",
+                "record": {
+                    "fldJ9P0GxkZmp9Pdl": "Enviado",
+                    "fldRynsS5CB4MP9Rf": "Hola {{1.`Nombre/ID paciente`}}, gracias por contactar a Clínica Vitalis.\nEn base a tu consulta (Motivo: {{1.Motivo}}), nuestro equipo médico revisó tu caso y confirma que es prioritario. Te recomendamos acudir a la guardia más cercana o comunicarte al [tu teléfono de guardia] lo antes posible.\n\nSi tu situación empeora, llamá inmediatamente al sistema de emergencias.\n\nEquipo Clínica Vitalis"
+                },
+                "typecast": false,
+                "useColumnId": false
+            },
+            "metadata": {
+                "designer": {
+                    "x": 600,
+                    "y": 0
+                },
+                "setupValidation": {
+                    "result": {
+                        "valid": true,
+                        "fields": []
+                    },
+                    "version": 1,
+                    "configuration": "4e465d01b61b3dc"
+                },
+                "restore": {
+                    "expect": {
+                        "base": {
+                            "label": "Urgencias Clinicas Vitalis"
+                        },
+                        "table": {
+                            "label": "URGENCIAS"
+                        },
+                        "record": {
+                            "nested": {
+                                "fldJ9P0GxkZmp9Pdl": {
+                                    "mode": "chose",
+                                    "label": "Enviado"
+                                },
+                                "fldgk61gmQ2gsBPro": {
+                                    "mode": "chose"
+                                },
+                                "fldjjC4LcQgjDeZwp": {
+                                    "mode": "chose"
+                                },
+                                "fldjpjdfChwmWrsGj": {
+                                    "mode": "chose",
+                                    "label": "Empty"
+                                }
+                            }
+                        },
+                        "typecast": {
+                            "mode": "chose"
+                        },
+                        "useColumnId": {
+                            "mode": "chose"
+                        }
+                    },
+                    "parameters": {
+                        "__IMTCONN__": {
+                            "data": {
+                                "scoped": "true",
+                                "connection": "airtable3"
+                            },
+                            "label": "Diana's Airtable OAuth connection (User ID: usrXwc2vfQqOWAJI8)"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "__IMTCONN__",
+                        "type": "account:airtable3,airtable2",
+                        "label": "Connection",
+                        "required": true
+                    }
+                ],
+                "expect": [
+                    {
+                        "name": "base",
+                        "type": "select",
+                        "label": "Base",
+                        "required": true
+                    },
+                    {
+                        "name": "typecast",
+                        "type": "boolean",
+                        "label": "Smart links",
+                        "required": true
+                    },
+                    {
+                        "name": "useColumnId",
+                        "type": "boolean",
+                        "label": "Use Column ID",
+                        "required": true
+                    },
+                    {
+                        "name": "table",
+                        "type": "select",
+                        "label": "Table",
+                        "required": true
+                    },
+                    {
+                        "name": "id",
+                        "type": "text",
+                        "label": "Record ID",
+                        "required": true
+                    },
+                    {
+                        "name": "record",
+                        "spec": [
+                            {
+                                "name": "fldIJh9Bi31EyTalp",
+                                "type": "text",
+                                "label": "Nombre/ID paciente"
+                            },
+                            {
+                                "mode": "edit",
+                                "name": "fldJ9P0GxkZmp9Pdl",
+                                "type": "select",
+                                "label": "Estado"
+                            },
+                            {
+                                "name": "fldM55Vm2bnBNhpQH",
+                                "type": "text",
+                                "label": "Mensaje Original"
+                            },
+                            {
+                                "name": "fldgk61gmQ2gsBPro",
+                                "type": "boolean",
+                                "label": "Aprobado"
+                            },
+                            {
+                                "mode": "edit",
+                                "name": "fldjpjdfChwmWrsGj",
+                                "type": "select",
+                                "label": "Prioridad IA"
+                            },
+                            {
+                                "name": "fldc4WSUHDUH0IzeE",
+                                "type": "text",
+                                "label": "Motivo"
+                            },
+                            {
+                                "name": "fldywAk2xSRbKSSlx",
+                                "type": "text",
+                                "label": "Canal Contacto"
+                            },
+                            {
+                                "name": "fldRynsS5CB4MP9Rf",
+                                "type": "text",
+                                "label": " Respuesta Enviada"
+                            },
+                            {
+                                "name": "fldjjC4LcQgjDeZwp",
+                                "spec": {
+                                    "name": "value",
+                                    "label": "Record ID"
+                                },
+                                "type": "array",
+                                "label": "LOG DE ERRORES"
+                            }
+                        ],
+                        "type": "collection",
+                        "label": "Record"
+                    }
+                ],
+                "interface": [
+                    {
+                        "name": "id",
+                        "type": "text",
+                        "label": "ID"
+                    },
+                    {
+                        "name": "createdTime",
+                        "type": "date",
+                        "label": "Created Time"
+                    },
+                    {
+                        "name": "Nombre/ID paciente",
+                        "type": "text",
+                        "label": "Nombre/ID paciente"
+                    },
+                    {
+                        "name": "Estado",
+                        "type": "text",
+                        "label": "Estado"
+                    },
+                    {
+                        "name": "Mensaje Original",
+                        "type": "text",
+                        "label": "Mensaje Original",
+                        "multiline": true
+                    },
+                    {
+                        "name": "Aprobado",
+                        "type": "boolean",
+                        "label": "Aprobado"
+                    },
+                    {
+                        "name": "Fecha Recepción",
+                        "type": "date",
+                        "label": "Fecha Recepción"
+                    },
+                    {
+                        "name": "Prioridad IA",
+                        "type": "text",
+                        "label": "Prioridad IA"
+                    },
+                    {
+                        "name": "Motivo",
+                        "type": "text",
+                        "label": "Motivo",
+                        "multiline": true
+                    },
+                    {
+                        "name": "Última Ejecución",
+                        "type": "date",
+                        "label": "Última Ejecución"
+                    },
+                    {
+                        "name": "Canal Contacto",
+                        "type": "text",
+                        "label": "Canal Contacto"
+                    },
+                    {
+                        "name": " Respuesta Enviada",
+                        "type": "text",
+                        "label": " Respuesta Enviada",
+                        "multiline": true
+                    },
+                    {
+                        "name": "LOG DE ERRORES",
+                        "spec": {
+                            "label": "Record ID"
+                        },
+                        "type": "array",
+                        "label": "LOG DE ERRORES"
+                    }
+                ]
+            }
+        }
+    ],
+    "metadata": {
+        "instant": false,
+        "version": 1,
+        "scenario": {
+            "roundtrips": 1,
+            "maxErrors": 3,
+            "autoCommit": true,
+            "autoCommitTriggerLast": true,
+            "sequential": false,
+            "slots": null,
+            "confidential": false,
+            "dataloss": false,
+            "dlq": false,
+            "freshVariables": false
+        },
+        "designer": {
+            "orphans": []
+        },
+        "zone": "us2.make.com",
+        "notes": []
+    }
+}
